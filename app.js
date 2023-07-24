@@ -13,7 +13,7 @@ const app = express();
 
 app.use(helmet());
 
-mongoose.connect(`mongodb://${process.env.DOMAIN}/bitfilmsdb`, {
+mongoose.connect(`mongodb://${process.env.NODE_ENV === 'production' ? process.env.DOMAIN : '127.0.0.1:27017'}/bitfilmsdb`, {
   useNewUrlParser: true,
 })
   .then(() => {
