@@ -4,17 +4,22 @@ const NotFoundError = require('../utils/customErrorsClasses/NotFoundError');
 const ConflictError = require('../utils/customErrorsClasses/ConflictError');
 const BadRequestError = require('../utils/customErrorsClasses/BadRequestError');
 const ValidationError = require('../utils/customErrorsClasses/ValidationError');
+const {
+  NOT_FOUND_MESSAGE,
+  NOT_UNIQUE_EMAIL_MESSAGE,
+  INCORRECT_DATA_TRANSMITTED_MESSAGE,
+} = require('../utils/constants');
 
 const errorsHandler = (err, req, res, next) => {
   let error = err;
   if (err instanceof mongoose.Error.DocumentNotFoundError) {
-    error = new NotFoundError('По запросу ничего не найдено');
+    error = new NotFoundError(NOT_FOUND_MESSAGE);
   } else if (err.code === 11000) {
-    error = new ConflictError('Пользователь с таким email уже существует');
+    error = new ConflictError(NOT_UNIQUE_EMAIL_MESSAGE);
   } else if (err instanceof mongoose.Error.CastError) {
-    error = new BadRequestError('Переданы некорректные данные');
+    error = new BadRequestError(INCORRECT_DATA_TRANSMITTED_MESSAGE);
   } else if (err instanceof mongoose.Error.ValidationError) {
-    error = new ValidationError('Переданы некорректные данные');
+    error = new ValidationError(INCORRECT_DATA_TRANSMITTED_MESSAGE);
   }
   if (!error.statusCode) {
     // eslint-disable-next-line no-console

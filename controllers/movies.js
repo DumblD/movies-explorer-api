@@ -1,4 +1,8 @@
 const Movie = require('../models/movie');
+const {
+  NO_RIGHTS_MESSAGE,
+  FILM_REMOVED_MESSAGE,
+} = require('../utils/constants');
 const ForbiddenError = require('../utils/customErrorsClasses/ForbiddenError');
 
 const getMovies = async (req, res, next) => {
@@ -31,10 +35,10 @@ const deleteMovie = async (req, res, next) => {
       .orFail();
     const movieIdOwner = selectedMovie.owner.toString();
     if (ownId !== movieIdOwner) {
-      throw new ForbiddenError('Недостаточно прав');
+      throw new ForbiddenError(NO_RIGHTS_MESSAGE);
     }
     await selectedMovie.deleteOne();
-    res.status(200).send({ message: 'Фильм удалён' });
+    res.status(200).send({ message: FILM_REMOVED_MESSAGE });
   } catch (err) {
     next(err);
   }

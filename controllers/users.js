@@ -2,6 +2,11 @@ const bcrypt = require('bcryptjs');
 const jsonWebToken = require('jsonwebtoken');
 const User = require('../models/user');
 const UnauthorizedError = require('../utils/customErrorsClasses/UnauthorizedError');
+const {
+  UNSUCCESSFUL_AUTHORIZATION_MESSAGE,
+  SUCCESSFUL_AUTHENTICATION_MESSAGE,
+  COOKIES_DELETED_MESSAGE,
+} = require('../utils/constants');
 
 const login = async (req, res, next) => {
   try {
@@ -9,11 +14,11 @@ const login = async (req, res, next) => {
     const foundUser = await User.findOne({ email })
       .select('+password');
     if (!foundUser) {
-      throw new UnauthorizedError('Неуспешная авторизация');
+      throw new UnauthorizedError(UNSUCCESSFUL_AUTHORIZATION_MESSAGE);
     }
     const isPasswordValid = await bcrypt.compare(password, foundUser.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedError('Неуспешная авторизация');
+      throw new UnauthorizedError(UNSUCCESSFUL_AUTHORIZATION_MESSAGE);
     }
     const jwt = jsonWebToken.sign(
       { _id: foundUser._id },
@@ -25,7 +30,7 @@ const login = async (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-    res.status(200).send({ message: 'Аутентификация прошла успешна' });
+    res.status(200).send({ message: SUCCESSFUL_AUTHENTICATION_MESSAGE });
   } catch (err) {
     next(err);
   }
@@ -57,7 +62,7 @@ const logout = async (req, res, next) => {
           httpOnly: true,
           sameSite: true,
         });
-      res.status(200).send({ message: 'Cookies удалены' });
+      res.status(200).send({ message: COOKIES_DELETED_MESSAGE });
     }
   } catch (err) {
     next(err);
