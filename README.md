@@ -16,7 +16,7 @@
 
 ## Ссылки на проект
 
-IP 51.250.13.211
+IP 84.201.173.60
 
 Frontend https://movies-search.nomoredomains.xyz
 
