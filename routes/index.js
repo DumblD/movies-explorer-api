@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { limiter, signInLimiter } = require('../middlewares/rateLimiter');
 const {
   validateAuthentication,
   validateRegistration,
@@ -14,13 +13,13 @@ const {
 } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 
-router.post('/signin', signInLimiter, validateAuthentication, login);
+router.post('/signin', validateAuthentication, login);
 
 router.post('/signup', validateRegistration, createUser);
 
 router.post('/signout', logout);
 
-router.use(auth, limiter);
+router.use(auth);
 
 router.use(usersRouter, moviesRouter, invalidRoutes);
 
