@@ -30,7 +30,7 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 app.use(cors({
-  origin: 'https://movies-search.nomoredomains.xyz',
+  origin: 'https://movies-explorer.xyz',
   credentials: true,
 }));
 
